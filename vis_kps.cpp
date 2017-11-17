@@ -5,6 +5,7 @@
 #define OUT_PATH_KP "out_kp.png"
 #define OUT_PATH_SEG "out_seg.png"
 #define OUT_PATH_MATCH "out_match.png"
+#define POINT_RAD 2
 
 int main(int argc,char **argv) {
 
@@ -13,8 +14,22 @@ int main(int argc,char **argv) {
   const char *file_im = cimg_option("-img", IM_DIR "1.jpg", "Input Image");
   const char *file_kp = cimg_option("-kps", IM_DIR "1.kpt", "Input Keypoints");
   const double k_tol   = cimg_option("-k", 1.0, "k-val for tolerance");
-  const char *weight_metric = cimg_option("-weight", "l2",
+  const char *weight_metric = cimg_option("-weight", "rgb_l2",
       "Metric to use for pixel dissimilarity");
+
+  if (strcmp(weight_metric, "rgb_l2") == 0) {
+    cout << "yay l2!" << endl;
+  }
+  else if (strcmp(weight_metric, "rgb_l1") == 0) {
+    cout << "yay l1!" << endl;
+  }
+  else if (strcmp(weight_metric, "intensity_l1") == 0) {
+    cout << "yay intensity!" << endl;
+  }
+  else {
+    cerr << "bad weight metric" << endl;
+    return 0;
+  }
 
   clock_t start;
 
@@ -31,7 +46,8 @@ int main(int argc,char **argv) {
 
   img_t temp(img);
   for (auto& p : kps) {
-      temp.draw_point(int(p.x), int(p.y), &point_color.x);
+      //temp.draw_point(int(p.x), int(p.y), &point_color.x);
+      temp.draw_circle(int(p.x), int(p.y), POINT_RAD, &point_color.x);
   }
   temp.save(OUT_PATH_KP);
 
@@ -76,7 +92,7 @@ int main(int argc,char **argv) {
   for (int i = 0; i < 5; ++i) {
       for (int j = 0; j < 5; ++j) {
         for (int k = 0; k < 5; ++k) {
-            color_cycle.push_back({50*i, 50*j, 50*k});
+          color_cycle.push_back({50*i, 50*j, 50*k});
         }
       }
   }
@@ -120,7 +136,8 @@ int main(int argc,char **argv) {
   for (auto& kp_group : keypoint_groups) {
     color_t color = color_cycle[color_ix++ % n_colors];
     for (auto& p : kp_group) {
-        temp3.draw_point(int(p.x), int(p.y), &color.x);
+        //temp3.draw_point(int(p.x), int(p.y), &color.x);
+        temp3.draw_circle(int(p.x), int(p.y), POINT_RAD, &color.x);
     }
   }
   temp3.save(OUT_PATH_MATCH);
