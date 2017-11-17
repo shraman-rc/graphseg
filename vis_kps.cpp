@@ -1,10 +1,7 @@
 #include "vis_kps.hpp"
-
-using namespace std;
-
 #include "disjoint_set.hpp"
 
-#define IM_DIR "test/"
+#define IM_DIR "img/"
 #define OUT_PATH "out.png"
 
 int main(int argc,char **argv) {
@@ -13,7 +10,7 @@ int main(int argc,char **argv) {
   cimg_usage("Superimpose keypoints onto 2D image");
   const char *file_im = cimg_option("-img", IM_DIR "1.jpg", "Input Image");
   const char *file_kp = cimg_option("-kps", IM_DIR "1.kpt", "Input Keypoints");
-  const double k_tol   = cimg_option("-k", 40.0, "k-val for tolerance");
+  const double k_tol   = cimg_option("-k", 1.0, "k-val for tolerance");
 
   clock_t start;
 
@@ -74,23 +71,32 @@ int main(int argc,char **argv) {
   }
   int n_colors = color_cycle.size();
 
+ // color_t color_cycle[3] = {{255, 0, 0}, {0, 255, 0}, {0, 0, 255}};
+ // int n_colors = 3;
+
   start = clock();
   vector<vector<int> >segments;
   cc.all_sets(segments);
   printf("extracted segments. (%fs)\n", bench(start));
 
   int color_ix = 0;
+  int n_seg = segments.size();
+  vector<int> component_sizes;
+
   start = clock();
   for (auto& seg : segments) {
-      color_t color = color_cycle[color_ix % n_colors];
-      for (int node_idx : seg) {
-          int3_t p = itoij(node_idx, width);
-          // TODO: change to set the pixel value instead
-          img.draw_point(int(p.x), int(p.y), &color.x);
-      }
+    component_sizes.push_back(seg.size());
+    color_t color = color_cycle[color_ix++ % n_colors];
+    for (int node_idx : seg) {
+        int3_t p = itoij(node_idx, width);
+        // TODO: change to set the pixel value instead
+        img.draw_point(int(p.x), int(p.y), &color.x);
+    }
   }
   img.save(OUT_PATH);
   printf("colored segments. (%fs)\n", bench(start));
+  printf("average segment size: %f\n", accumulate(
+        component_sizes.begin(), component_sizes.end(), 0) / float(n_seg));
 
   return 0;
 }

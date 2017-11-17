@@ -21,7 +21,8 @@ typedef cil::CImg<unsigned char> img_t;
 typedef vec3_t<int> int3_t;
 typedef vec3_t<float> float3_t;
 typedef vec3_t<double> double3_t;
-typedef vec3_t<unsigned char> color_t;
+//typedef vec3_t<unsigned char> color_t;
+typedef vec3_t<int8_t> color_t;
 
 // TODO: make consistent - replace r,c with x,y
 inline int ijtoi(int r, int c, int width) {

@@ -3,6 +3,8 @@
 
 class DisjointSets {
 
+  public:
+
     size_t numel = 0;
     size_t numsets = 0;
 
@@ -14,7 +16,7 @@ class DisjointSets {
       //  - although similar, rank != height; we do not update rank after
       //    path compression, but doesn't matter since amortized analysis
       //    holds true so long as |S| >= 2^(rank(S)) for every set S
-  public:
+
 
     DisjointSets(int n, float init_internal_diff=0.0f) : numel(n), numsets(n) {
         parents.resize(n);
