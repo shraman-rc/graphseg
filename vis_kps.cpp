@@ -16,6 +16,8 @@ int main(int argc,char **argv) {
   const double k_tol   = cimg_option("-k", 1.0, "k-val for tolerance");
   const char *weight_metric = cimg_option("-weight", "rgb_l2",
       "Metric to use for pixel dissimilarity");
+  const int merge_thres = cimg_option("-m", 10, 
+      "Size threshold for merging components (during postprocess)");
 
   if (strcmp(weight_metric, "rgb_l2") == 0) {
     cout << "yay l2!" << endl;
@@ -81,6 +83,20 @@ int main(int argc,char **argv) {
   }
   printf("segmented. (%fs)\n", bench(start));
 
+  // -- Refine
+  start = clock();
+  for (edge_t& e : edges) {
+    if (min(cc.set_size(e.u), cc.set_size(e.v)) < merge_thres) {
+      int pu = cc.find(e.u);
+      int pv = cc.find(e.v);
+      float max_weight = max(cc.max_w[pu], cc.max_w[pv]);
+      max_weight = max(max_weight, e.w);
+      cc.merge(e.u, e.v, max_weight);
+    }
+  }
+  printf("refined. (%fs)\n", bench(start));
+
+
   start = clock();
   vector<vector<int> >segments;
   cc.all_sets(segments);
@@ -141,6 +157,6 @@ int main(int argc,char **argv) {
     }
   }
   temp3.save(OUT_PATH_MATCH);
-  
+
   return 0;
 }
