@@ -3,13 +3,9 @@
 
 using namespace std; // bad practice
 
-struct point_t {
-    float x,y;
-};
-
-struct edge_t {
-    int u, v;
-    float w;
+template<typename T>
+struct vec2_t {
+    T x,y;
 };
 
 template<typename T>
@@ -17,22 +13,29 @@ struct vec3_t {
     T x,y,z;
 };
 
-typedef cil::CImg<unsigned char> img_t;
-typedef vec3_t<int> int3_t;
-typedef vec3_t<float> float3_t;
+struct edge_t {
+    int u, v;
+    float w;
+};
+
+typedef cil::CImg<uint8_t> img_t;
+typedef vec2_t<int>       int2_t;
+typedef vec2_t<float>   float2_t;
+typedef vec2_t<double> double2_t;
+typedef vec3_t<int>       int3_t;
+typedef vec3_t<float>   float3_t;
 typedef vec3_t<double> double3_t;
-//typedef vec3_t<unsigned char> color_t;
-typedef vec3_t<int8_t> color_t;
+typedef vec3_t<uint8_t> color_t;
 
 // TODO: make consistent - replace r,c with x,y
 inline int ijtoi(int r, int c, int width) {
     return r*width + c;
 }
 
-inline int3_t itoij(int i, int width) {
+inline int2_t itoij(int i, int width) {
     int y = i / width;
     int x = i - (y*width);
-    return {x, y, 0};
+    return {x, y};
 }
 
 inline float pix_diff(int3_t p1, int3_t p2) {
@@ -57,7 +60,7 @@ inline edge_t gen_edge(img_t& im, int r1, int c1, int r2, int c2, int width) {
     return {ijtoi(r1,c1,width), ijtoi(r2,c2,width), pix_diff(p1, p2)};
 }
 
-void extract_points(const char* path, vector<point_t>& out) {
+void extract_points(const char* path, vector<float2_t>& out) {
     ifstream f(path);
     int n;
     f >> n;

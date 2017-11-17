@@ -21,7 +21,7 @@ int main(int argc,char **argv) {
   printf("image loaded. (h: %d, w: %d)\n", height, width);
 
   // -- Draw keypoints
-  vector<point_t> kps;
+  vector<float2_t> kps;
   extract_points(file_kp, kps);
   color_t point_color  = {255, 0, 0};
 
@@ -71,9 +71,6 @@ int main(int argc,char **argv) {
   }
   int n_colors = color_cycle.size();
 
- // color_t color_cycle[3] = {{255, 0, 0}, {0, 255, 0}, {0, 0, 255}};
- // int n_colors = 3;
-
   start = clock();
   vector<vector<int> >segments;
   cc.all_sets(segments);
@@ -88,9 +85,10 @@ int main(int argc,char **argv) {
     component_sizes.push_back(seg.size());
     color_t color = color_cycle[color_ix++ % n_colors];
     for (int node_idx : seg) {
-        int3_t p = itoij(node_idx, width);
-        // TODO: change to set the pixel value instead
-        img.draw_point(int(p.x), int(p.y), &color.x);
+        int2_t p = itoij(node_idx, width);
+        img(p.x, p.y, 0, 0) = color.x;
+        img(p.x, p.y, 0, 1) = color.y;
+        img(p.x, p.y, 0, 2) = color.z;
     }
   }
   img.save(OUT_PATH);
@@ -98,5 +96,7 @@ int main(int argc,char **argv) {
   printf("average segment size: %f\n", accumulate(
         component_sizes.begin(), component_sizes.end(), 0) / float(n_seg));
 
+  // -- Matching
+  
   return 0;
 }
