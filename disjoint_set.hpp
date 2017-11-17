@@ -97,15 +97,20 @@ class DisjointSets {
         return max_w[parents[e1]];
     }
 
-    vector<int> all_sets() {
-      // Returns list of representative elements (parents) of each set
-      vector<int> sets;
-      sets.reserve(numsets);
-      for (int i = 0; i < int(numel); ++i) {
-        if (size[i] > 0) {
-          sets.push_back(i);
+    void all_sets(vector<vector<int> >& sets) {
+      unordered_map<int, int> pi_map;
+      int pi_ix = 0;
+      for (int node_i = 0; node_i < int(numel); ++node_i) {
+        if (size[node_i] > 0) { // found set rep
+          pi_map[node_i] = pi_ix;
+          pi_ix++;
         }
       }
-      return sets;
+
+      sets.resize(numsets);
+      for (int node_i = 0; node_i < int(numel); ++node_i) {
+          int pi = find(node_i);
+          sets[pi_map[pi]].push_back(node_i);
+      }
     }
 };
