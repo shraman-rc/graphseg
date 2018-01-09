@@ -19,20 +19,6 @@ int main(int argc,char **argv) {
   const int merge_thres = cimg_option("-m", 10, 
       "Size threshold for merging components (during postprocess)");
 
-  if (strcmp(weight_metric, "rgb_l2") == 0) {
-    cout << "yay l2!" << endl;
-  }
-  else if (strcmp(weight_metric, "rgb_l1") == 0) {
-    cout << "yay l1!" << endl;
-  }
-  else if (strcmp(weight_metric, "intensity_l1") == 0) {
-    cout << "yay intensity!" << endl;
-  }
-  else {
-    cerr << "bad weight metric" << endl;
-    return 0;
-  }
-
   clock_t start;
 
   img_t img(file_im);
@@ -57,9 +43,9 @@ int main(int argc,char **argv) {
   //    1) Build graph
   start = clock();
   vector<edge_t> edges;
-  edges.reserve(4*n_nodes); // over-approximation
+  edges.reserve(4*n_nodes); // over estimate
   build_graph(img, edges);
-  printf("graph built. (edges: %zu) (%fs)\n", edges.size(), bench(start)); // TODO: Check
+  //printf("graph built. (edges: %zu) (%fs)\n", edges.size(), bench(start));
 
   //    1.5) Sort edges
   start = clock();

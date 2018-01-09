@@ -37,12 +37,22 @@ inline int2_t itoij(int i, int width) {
     return {x, y};
 }
 
-inline float pix_diff(int3_t p1, int3_t p2) {
-    float xd = float(p1.x-p2.x);
-    float yd = float(p1.y-p2.y);
-    float zd = float(p1.z-p2.z);
+template<typename T>
+inline float l2(vec3_t<T> v1, vec3_t<T> v2) {
+    float xd = float(v1.x-v2.x);
+    float yd = float(v1.y-v2.y);
+    float zd = float(v1.z-v2.z);
 
     return (xd*xd) + (yd*yd) + (zd*zd);
+}
+
+template<typename T>
+inline float l1(vec3_t<T> v1, vec3_t<T> v2) {
+    float xd = float(v1.x-v2.x);
+    float yd = float(v1.y-v2.y);
+    float zd = float(v1.z-v2.z);
+
+    return abs(xd) + abs(yd) + abs(zd);
 }
 
 inline edge_t gen_edge(img_t& im, int2_t pos1, int2_t pos2, int width) {
@@ -55,7 +65,7 @@ inline edge_t gen_edge(img_t& im, int2_t pos1, int2_t pos2, int width) {
         im(pos2.x, pos2.y, 0, 1),
         im(pos2.x, pos2.y, 0, 2)};
 
-    return {ijtoi(pos1, width), ijtoi(pos2, width), pix_diff(p1, p2)};
+    return {ijtoi(pos1, width), ijtoi(pos2, width), l2(p1, p2)};
 }
 
 void extract_points(const char* path, vector<float2_t>& out) {
