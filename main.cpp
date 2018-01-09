@@ -1,4 +1,4 @@
-#include "vis_kps.hpp"
+#include "main.hpp"
 #include "disjoint_set.hpp"
 
 #define IM_DIR "img/"
@@ -53,7 +53,7 @@ int main(int argc,char **argv) {
     return l.w < r.w;
   };
   sort(edges.begin(), edges.end(), cmp);
-  printf("sorted. (%fs)\n", bench(start));
+  //printf("sorted. (%fs)\n", bench(start));
 
   //    2) Felzenswalb
   start = clock();
@@ -67,7 +67,7 @@ int main(int argc,char **argv) {
           cc.merge(n1, n2, e.w);
       }
   }
-  printf("segmented. (%fs)\n", bench(start));
+  //printf("segmented. (%fs)\n", bench(start));
 
   // -- Refine
   start = clock();
@@ -86,7 +86,7 @@ int main(int argc,char **argv) {
   start = clock();
   vector<vector<int> >segments;
   cc.all_sets(segments);
-  printf("extracted segments. (%fs)\n", bench(start));
+  //printf("extracted segments. (%fs)\n", bench(start));
   int n_seg = segments.size();
 
   //    3) Label
@@ -121,7 +121,7 @@ int main(int argc,char **argv) {
     }
   }
   temp2.save(OUT_PATH_SEG);
-  printf("colored segments. (%fs)\n", bench(start));
+  //printf("colored segments. (%fs)\n", bench(start));
   printf("average segment size: %f\n", accumulate(
         component_sizes.begin(), component_sizes.end(), 0) / float(n_seg));
 

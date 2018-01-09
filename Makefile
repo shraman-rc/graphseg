@@ -1,5 +1,5 @@
 # Files which do not necessarily require external libraries to run.
-CIMG_FILES = vis_kps
+CIMG_FILES = main
 #CIMG_FILES = tests
 	    
 # Files which requires external libraries to run.
