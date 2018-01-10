@@ -53,7 +53,7 @@ int main(int argc,char **argv) {
     return l.w < r.w;
   };
   sort(edges.begin(), edges.end(), cmp);
-  //printf("sorted. (%fs)\n", bench(start));
+  printf("sorted. (%fs)\n", bench(start));
 
   //    2) Felzenswalb
   start = clock();
@@ -67,7 +67,7 @@ int main(int argc,char **argv) {
           cc.merge(n1, n2, e.w);
       }
   }
-  //printf("segmented. (%fs)\n", bench(start));
+  printf("segmented. (%fs)\n", bench(start));
 
   // -- Refine
   start = clock();
@@ -81,7 +81,6 @@ int main(int argc,char **argv) {
     }
   }
   printf("refined. (%fs)\n", bench(start));
-
 
   start = clock();
   vector<vector<int> >segments;
