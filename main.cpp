@@ -6,13 +6,14 @@
 #define OUT_PATH_SEG "out_seg.png"
 #define OUT_PATH_MATCH "out_match.png"
 #define POINT_RAD 2
+#define NULL_STR "NULL"
 
 int main(int argc,char **argv) {
 
   // Read and check command line parameters.
   cimg_usage("Superimpose keypoints onto 2D image");
   const char *file_im = cimg_option("-img", IM_DIR "1.jpg", "Input Image");
-  const char *file_kp = cimg_option("-kps", IM_DIR "1.kpt", "Input Keypoints");
+  const char *file_kp = cimg_option("-kps", NULL_STR, "Input Keypoints");
   const double k_tol   = cimg_option("-k", 1.0, "k-val for tolerance");
   const char *weight_metric = cimg_option("-weight", "rgb_l2",
       "Metric to use for pixel dissimilarity");
@@ -25,27 +26,15 @@ int main(int argc,char **argv) {
   int width = img.width();
   int height = img.height();
   int n_nodes = width*height;
-  printf("image loaded. (h: %d, w: %d)\n", height, width);
+  printf("loaded image. (h: %d, w: %d)\n", height, width);
 
-  // -- Draw keypoints
-  vector<float2_t> kps;
-  extract_points(file_kp, kps);
-  color_t point_color  = {255, 0, 0};
-
-  img_t temp(img);
-  for (auto& p : kps) {
-      //temp.draw_point(int(p.x), int(p.y), &point_color.x);
-      temp.draw_circle(int(p.x), int(p.y), POINT_RAD, &point_color.x);
-  }
-  temp.save(OUT_PATH_KP);
-
-  // -- Segmentation
+  // -- Segment
   //    1) Build graph
   start = clock();
   vector<edge_t> edges;
   edges.reserve(4*n_nodes); // over estimate
   build_graph(img, edges);
-  //printf("graph built. (edges: %zu) (%fs)\n", edges.size(), bench(start));
+  printf("graphed. (%fs)\n", bench(start));
 
   //    1.5) Sort edges
   start = clock();
@@ -120,28 +109,40 @@ int main(int argc,char **argv) {
     }
   }
   temp2.save(OUT_PATH_SEG);
-  //printf("colored segments. (%fs)\n", bench(start));
   printf("average segment size: %f\n", accumulate(
         component_sizes.begin(), component_sizes.end(), 0) / float(n_seg));
 
-  // -- Matching
-  vector<vector<float2_t> > keypoint_groups(n_seg);
-  for (float2_t& p : kps) {
-    int x = int(p.x);
-    int y = int(p.y);
-    keypoint_groups[labels[x][y]].push_back(p);
-  }
+  if (strcmp(file_kp, NULL_STR) != 0) {
 
-  img_t temp3(img);
-  color_ix = 0;
-  for (auto& kp_group : keypoint_groups) {
-    color_t color = color_cycle[color_ix++ % n_colors];
-    for (auto& p : kp_group) {
-        //temp3.draw_point(int(p.x), int(p.y), &color.x);
-        temp3.draw_circle(int(p.x), int(p.y), POINT_RAD, &color.x);
-    }
+   // -- Draw keypoints
+   vector<float2_t> kps;
+   extract_points(file_kp, kps);
+   color_t point_color  = {255, 0, 0};
+
+   img_t temp(img);
+   for (auto& p : kps) {
+       temp.draw_circle(int(p.x), int(p.y), POINT_RAD, &point_color.x);
+   }
+   temp.save(OUT_PATH_KP);
+
+   // -- Match
+   vector<vector<float2_t> > keypoint_groups(n_seg);
+   for (float2_t& p : kps) {
+     int x = int(p.x);
+     int y = int(p.y);
+     keypoint_groups[labels[x][y]].push_back(p);
+   }
+
+   img_t temp3(img);
+   color_ix = 0;
+   for (auto& kp_group : keypoint_groups) {
+     color_t color = color_cycle[color_ix++ % n_colors];
+     for (auto& p : kp_group) {
+         temp3.draw_circle(int(p.x), int(p.y), POINT_RAD, &color.x);
+     }
+   }
+   temp3.save(OUT_PATH_MATCH);
   }
-  temp3.save(OUT_PATH_MATCH);
 
   return 0;
 }
