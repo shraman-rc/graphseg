@@ -24,4 +24,3 @@ To use this code for tracking, simply feed in a keypoints file with the `-kps` f
 
 - Edges include diagonals (i.e., 8 neighbors for non-border pixels).
 - Edges weights are computed as L2 distance between pixels (easily modifiable), see `main.hpp -> build_graph`.
-- 
