@@ -1,6 +1,4 @@
-A self-contained C++ implementation of Felzenszwalb's graph-based image segmentation algorithm ([Felzenszwalb et. al.](http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf)).
-
-Leverages CImg for I/O and drawing but otherwise written from scratch. Ping me if you find bugs!
+A self-contained C++ implementation of Felzenszwalb's graph-based image segmentation algorithm ([Felzenszwalb et. al.](http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf)). Uses [CImg](http://cimg.eu/) for I/O and drawing.
 
 ## Compiling
 
