@@ -16,6 +16,10 @@ The `-m` flag designates the merge threshold for swallowing smaller components i
 
 Due to the algorithm's simplicity, getting nice segmentation results requires striking a balance between `k` and `m` to avoid over-/under-segmentation artifacts. Note that `k` influences a threshold which adaptively during the segmentation phase, whereas `m` dictates agglomeration in a local neighborhood _after_ the spanning forest is complete. If, for instance, you'd like to capture the entire railing in `img/2.jpg` as one segment, you must increase `k`.
 
+### Keypoint-based tracking
+
+To use this code for tracking, simply feed in a keypoints file with the `-kps` flag. See `img/` for sample keypoint files and `run.sh` for sample commands.
+
 ## Implementation Details
 
 - Edges include diagonals (i.e., 8 neighbors for non-border pixels).
