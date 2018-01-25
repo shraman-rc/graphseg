@@ -1,4 +1,4 @@
-A self-contained C++ implementation of Felzenszwalb's image segmentation algorithm ([Felzenszwalb et. al.](http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf)). Uses [CImg](http://cimg.eu/) for I/O and drawing. Ping me
+A self-contained C++ implementation of Felzenszwalb's image segmentation algorithm ([Felzenszwalb et. al.](http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf)). Uses [CImg](http://cimg.eu/) for I/O and drawing.
 
 ## Compiling
 
