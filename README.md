@@ -1,8 +1,8 @@
-A self-contained C++ implementation of Felzenszwalb's graph-based image segmentation algorithm ([Felzenszwalb et. al.](http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf)). Uses [CImg](http://cimg.eu/) for I/O and drawing.
+A self-contained C++ implementation of Felzenszwalb's image segmentation algorithm ([Felzenszwalb et. al.](http://people.cs.uchicago.edu/~pff/papers/seg-ijcv.pdf)). Uses [CImg](http://cimg.eu/) for I/O and drawing. Ping me
 
 ## Compiling
 
-Requires Ubuntu 14.04+, g++ 4.8.4+, make 3.8+. Call `make` and you're set.
+Requires g++ 4.8.4+, make 3.8+. Call `make` and you're set.
 
 ## Running
 
@@ -14,9 +14,6 @@ The `-m` flag designates the merge threshold for swallowing smaller components i
 
 Due to the algorithm's simplicity, getting nice segmentation results requires striking a balance between `k` and `m` to avoid over-/under-segmentation. If, for instance, you'd like to capture the entire railing in `img/2.jpg` as one segment, you must increase `k` (not `m`). Note that `k` influences a threshold which adaptively during the segmentation phase, whereas `m` dictates agglomeration in a local neighborhood _after_ the spanning forest is complete. 
 
-### Keypoint-based tracking
-
-To use this code for tracking/labeling, provide a keypoints file with the `-kps` flag. See `img/` for sample keypoint files and `run.sh` for sample commands.
 
 ## Implementation Details
 
